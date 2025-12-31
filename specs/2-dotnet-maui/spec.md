@@ -1,12 +1,12 @@
-# Feature Specification: .NET MAUI Frontend
+# Feature Specification: .NET Blazor Frontend
 
-**Feature Branch**: `2-dotnet-maui`
+**Feature Branch**: `2-dotnet-Blazor`
 **Created**: 2025-12-31
 **Status**: Draft
-**Input**: Design and implement a cross-platform .NET MAUI frontend that follows the Plumb Dotnet Constitution (Privacy-First, Secret Hygiene & Key Vault First, Minimize Data Lifetime, Safe Logging & Telemetry, Least Privilege & Auditable Access, and CI security gates).
+**Input**: Design and implement a cross-platform .NET Blazor frontend that follows the Plumb Dotnet Constitution (Privacy-First, Secret Hygiene & Key Vault First, Minimize Data Lifetime, Safe Logging & Telemetry, Least Privilege & Auditable Access, and CI security gates).
 
 ## Summary
-A secure, privacy-first mobile/desktop client built on .NET MAUI that interacts with backend services without exposing secrets or PII, minimizes local data lifetime, and includes CI checks for safe logging, telemetry, and PII handling.
+A secure, privacy-first mobile/desktop client built on .NET Blazor that interacts with backend services without exposing secrets or PII, minimizes local data lifetime, and includes CI checks for safe logging, telemetry, and PII handling.
 
 ---
 
@@ -97,7 +97,7 @@ Telemetry must never contain PII or raw payloads; crash reports must be scrubbed
 ## Assumptions
 - Backend APIs perform server-side validation, token exchange, and PII-minimization logic; client is not the source of truth for policy enforcement.
 - CI is capable of running static analyzers, Roslyn analyzers, secrets scanning, and telemetry payload scanning during release pipelines.
-- Platform secure storage APIs are available on target platforms (.NET MAUI-supported OSes) and behave as documented.
+- Platform secure storage APIs are available on target platforms (.NET Blazor-supported OSes) and behave as documented.
 - User consent and privacy text will be part of the UX (localization to be handled by product/UX teams).
 
 ---

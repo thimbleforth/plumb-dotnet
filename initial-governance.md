@@ -28,7 +28,7 @@ A privacy‑first, secure‑by‑default governance policy for ingestion, proces
 ---
 
 ## Architecture & Design Guidelines 🏗️
-- Follow the three‑zone model: **Client (MAUI)**, **Service (.NET API in container)**, **Data (CosmosDB/SQL + Key Vault)**.
+- Follow the three‑zone model: **Client (Blazor)**, **Service (.NET API in container)**, **Data (CosmosDB/SQL + Key Vault)**.
 - Service pipeline: validate -> PII detection (Azure AI Language) -> redact -> normalize -> dedupe -> categorize -> store.
 - Use a thin server‑side query layer to return aggregated/redacted results; deliver row‑level data only on explicit request with additional decryption checks.
 - Prefer managed Azure services: Entra ID, Key Vault, CosmosDB/SQL/Postgres, Azure Container Apps.
@@ -65,7 +65,7 @@ A privacy‑first, secure‑by‑default governance policy for ingestion, proces
 ---
 
 ## UX / Client Requirements 🖥️
-- MAUI clients authenticate via Entra ID (OIDC/OAuth2); keep data in memory by default and offer an optional encrypted per‑session cache that is shredded on close.
+- Blazor clients authenticate via Entra ID (OIDC/OAuth2); keep data in memory by default and offer an optional encrypted per‑session cache that is shredded on close.
 - Client requests for raw row data must require additional authorization and Key Vault access for decryption.
 
 ---
