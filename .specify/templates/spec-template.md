@@ -77,11 +77,6 @@
 
 ## Requirements *(mandatory)*
 
-<!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right functional requirements.
--->
-
 ### Functional Requirements
 
 - **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
@@ -89,6 +84,19 @@
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
 - **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
 - **FR-005**: System MUST [behavior, e.g., "log all security events"]
+
+### PII & Security Requirements (MANDATORY when feature touches PII)
+
+- **PII-001**: If a feature touches PII, the spec MUST include the exact fields considered PII and
+  whether they will be collected, redacted, encrypted, or discarded.
+- **PII-002**: The spec MUST define retention policies for any sensitive or derived artifacts and a
+  shredding workflow for raw/staged data.
+- **PII-003**: The spec MUST declare memory/disk caps for ingestion pipelines and justify any
+  exceptions (default hard cap: 500MB; soft cap policy: ~120% of declared size).
+- **PII-004**: The spec MUST include acceptance tests that assert no raw payloads are written to disk
+  and no sensitive strings appear in logs or telemetry.
+- **SEC-001**: Any change involving secrets or key material MUST document Key Vault access requirements,
+  Managed Identity changes, and include a security review checklist.
 
 *Example of marking unclear requirements:*
 

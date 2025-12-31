@@ -51,6 +51,9 @@ description: "Task list template for feature implementation"
 - [ ] T001 Create project structure per implementation plan
 - [ ] T002 Initialize [language] project with [framework] dependencies
 - [ ] T003 [P] Configure linting and formatting tools
+- [ ] T004 Add repository-wide CI jobs for: secrets scanning, security linters, and sensitive-logging detection (if not present)
+- [ ] T005 [P] Add automated tests to assert uploads never touch disk and raw payloads are never logged (test skeletons)
+
 
 ---
 

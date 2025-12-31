@@ -31,7 +31,18 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+A feature plan MUST declare whether the work touches PII, secrets, encryption, or logging. If it does,
+it MUST include a brief compliance checklist derived from the repository constitution at
+`.specify/memory/constitution.md`. At minimum, the checklist MUST include:
+
+- Does the feature touch PII or regulated data? (YES/NO)
+- Required OpenAPI contract present and validated? (YES/NO)
+- Tests for: no-disk raw payload persistence, PII redaction, and safe logging included? (YES/NO)
+- Key Vault/secret access changes documented and reviewed? (YES/NO)
+
+Plans that answer YES to any PII-related gate MUST include threat model notes and a proposed
+retention/shredding workflow.
+
 
 ## Project Structure
 
