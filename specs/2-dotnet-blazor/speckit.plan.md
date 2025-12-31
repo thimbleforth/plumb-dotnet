@@ -48,6 +48,14 @@ Rationale: minimize attack surface and license surface by favoring official Micr
 - Third-party libraries: audit license and security posture, pin versions, include in SBOM. CI must fail on disallowed licenses.
 - Consent & permissions: explicit user consent for telemetry; request runtime permissions only when required and provide localized justification text in UX.
 
+## Constitution Alignment 🏛️
+This plan explicitly maps to `constitution.md` and mandates the following verifications and behaviors:
+- **No secrets in environment variables** — clients must rely on secure platform storage and server-side Key Vault access; CI must block changes that introduce env‑var secrets.
+- **Client defaults to in-memory data**; any local persistence must be encrypted, have short retention, and be prunable on demand (e.g., on logout or remote revoke).
+- **No sensitive telemetry or logs** — Roslyn analyzers, CI telemetry scans, and pre-send scrubbing must be part of the release gate.
+- **Explicit authorization for raw data** — any request returning raw row-level data requires additional auth checks and Key Vault-based decryption with audit trails.
+- **Retention & shredding** — offline queues and local caches must be auto‑shredded per policy; CI simulations should validate shredding behavior.
+
 ---
 
 ## UI Design Guidelines & Fluent UI Usage ✨
@@ -92,6 +100,8 @@ Notes:
 - Secure Storage Test: end-to-end auth flow using test tenant and assert tokens exist only in platform secure storage and cannot be read from FS.
 - Permission/Consent Test: UI tests that validate permission prompts only appear when features are invoked and that denial is safe.
 - Offline Sync Test: simulate offline queue, persist encrypted items, ensure retention pruning after policy period, and assert no PII persisted in plaintext.
+- Persistence test: assert client never writes raw sensitive inputs to disk; any local persistence must be encrypted and prunable (add automated UI/integration assertions).
+- CI telemetry/log-scan test: add a CI step that scans client logs and telemetry payloads for sensitive patterns and fails the pipeline when matches are found.
 - SDK Audit Test: CI fails when new SDKs are introduced without an approved security and license review.
 
 ---

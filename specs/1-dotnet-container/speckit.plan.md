@@ -48,6 +48,14 @@ Rationale: These are official Microsoft/Azure libraries and keep third-party dep
 - Scanning: Run SBOM generation and vulnerability scanning in CI (Trivy + Syft). These tools are free and effective.
 - Runtime hardening: run as non-root, make filesystem mostly read-only, set resource limits via platform (CPU, memory), configure probes.
 
+## Constitution Alignment 🏛️
+This plan explicitly enforces the repository governance defined in `constitution.md` (privacy-first, secret hygiene, minimal PII persistence, and verifiable CI checks):
+- **No secrets in environment variables** — use Azure Key Vault + Managed Identity for all secrets (no long-lived secrets in code or CI).
+- **No sensitive logs or telemetry** — add CI tests, static analysis, and log-scanning to detect accidental logging of payloads or PII.
+- **No raw CSV persistence to disk** — ingestion must process uploads in-memory with strict caps and shred inputs immediately; add tests to assert no disk writes.
+- **Network & auth**: require TLS 1.2+ (mTLS where needed) and enforce row-level authorization for sensitive access.
+- **Schema & API validation**: require OpenAPI specs and schema validation in CI to prevent schema changes from allowing inadvertent PII exposure.
+
 ---
 
 ## Dockerfile (recommended, minimal and secure)
@@ -139,6 +147,8 @@ Sample usage in code:
 - Build and scan test: CI runs and asserts SBOM created, Trivy scan passed, image pushed to ACR.
 - Runtime secret access: Deploy ephemeral to Container Apps with managed identity + Key Vault; retrieve and assert secret not written to disk or logs.
 - Redaction test: Feed PII input; assert no PII exists on disk or in logs.
+- Ingestion persistence test: upload representative payloads and assert the service processes in-memory only and never writes raw payloads to disk (add FS assertions to integration tests).
+- CI log-scan test: add a CI step that scans build and runtime logs for sensitive patterns/PII and fails the pipeline when matches are found.
 - Reproducible build test: Build the same commit locally vs in CI and compare digest.
 - Failure mode tests: Simulate Key Vault downtime and large input to assert fail-fast behavior and safe logging.
 
