@@ -42,6 +42,14 @@ Telemetry must never contain PII or raw payloads; crash reports must be scrubbed
 
 ---
 
+## Constitution Alignment 🏛️
+This feature MUST conform to the Plumb Dotnet Constitution (`constitution.md`) and the project governance for PII handling. Key required checks and behaviors:
+- **No secrets in environment variables** — client and CI must avoid embedding long-lived secrets; prefer platform secure storage and server-side token exchange patterns; CI should block changes that introduce env-var secrets.
+- **Client defaults to in-memory data** — any local persistence must be encrypted, prunable, and have short retention; acceptance tests must validate shredding and revocation behavior.
+- **No sensitive telemetry or logs** — integrate Roslyn analyzers, pre-send scrubbing, and CI telemetry/log-scanning gates that fail releases if sensitive patterns are found.
+- **Explicit authorization for raw data** — requests that return raw row-level data require stronger auth and audit trails; decryption flows require Key Vault access and logging of the fact of decryption only.
+- **Retention & shredding enforcement** — offline queues and caches must auto-prune and be covered by CI tests that simulate retention policies.
+
 ### Edge Cases
 - Device offline sync: ensure queued items are encrypted, have retention limits, and are pruned after successful sync.
 - Lost device: ensure local caches and tokens can be revoked remotely and that local caches are auto-evicted after configurable inactivity or policy expiration.
@@ -117,7 +125,8 @@ Telemetry must never contain PII or raw payloads; crash reports must be scrubbed
 - **Permission Flow Test**: UI tests to validate permission prompts only appear when feature invoked and that denial flows are handled gracefully without leaking data.
 - **Offline Sync Test**: Simulate network loss and re-sync; assert queued items are encrypted, pruned per retention policy, and do not contain PII in logs.
 - **Third-party SDK Audit Test**: CI checks for allowed SDK versions/licenses and runs static checks to ensure SDKs are not configured to send PII.
-
+- Persistence test: assert client never writes raw sensitive inputs to disk; any local persistence must be encrypted and prunable (add automated UI/integration assertions).
+- CI telemetry/log-scan test: add a CI step that scans client logs and telemetry payloads for sensitive patterns and fails the pipeline when matches are found.
 ---
 
 ## Dependencies

@@ -44,6 +44,16 @@ An operator wants containers to access secrets securely without embedding creden
 
 ---
 
+## Constitution Alignment 🏛️
+This feature MUST adhere to the Plumb Dotnet Constitution (`constitution.md`). The following verifications are mandatory and must be codified into CI and acceptance tests where applicable:
+- **No secrets in environment variables** — enforce Key Vault + Managed Identity for all runtime secrets; CI must block changes that introduce long-lived env vars or embedded secrets.
+- **No sensitive logs or telemetry** — add static analysis, log-scanning, and CI gates that fail on sensitive-string matches (PII patterns, raw payloads).
+- **No raw payload persistence to disk** — ingestion must process uploads in-memory with enforceable caps and automatic shredding; include integration tests that assert no raw payload writes to filesystem.
+- **OpenAPI/schema validation & auth** — require schema validation for uploads and additional authorization checks/audit trails for any row-level data or decryption endpoints.
+- **Retention & shredding policies** — transient artifacts must have short TTLs and automatic cleanup enforced by platform or CI checks.
+
+---
+
 ### Edge Cases
 
 - How does the container behave if the secret provider is unavailable? (Retry/backoff and fail-fast with non-sensitive error codes.)
@@ -92,6 +102,8 @@ An operator wants containers to access secrets securely without embedding creden
 - Build and scan pipeline test: Trigger CI build, assert SBOM generated, image scan passes policy, and image published to staging registry.
 - Runtime secret access test: Deploy to ephemeral environment with Key Vault/restricted secrets; assert that container can retrieve secret and that secret never appears in logs or persisted files.
 - Redaction test: Feed input with PII; assert no PII found on disk or in logs after processing.
+- Ingestion persistence test: Upload representative payloads and assert the service performs in-memory-only processing and never writes raw payloads to disk (add filesystem assertions to integration tests).
+- CI log-scan test: Add a CI step that scans build and runtime logs for sensitive patterns/PII and fails the pipeline when matches are detected.
 - Failure mode tests: Simulate secret provider failure and large input memory spike; assert predictable fail-fast behavior and non-sensitive diagnostics.
 
 ## Dependencies
